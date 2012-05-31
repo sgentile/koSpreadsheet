@@ -4,8 +4,10 @@
     <head>
         <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
         <title>KoSpreadsheet</title>
+        <link rel="stylesheet" type="text/css" href="lib/bootstrap/css/bootstrap.min.css"/>
         <script src="lib/jquery-1.7.2.min.js"></script>
         <script src="lib/knockout-2.1.0.debug.js"></script>
+        <script src="lib/knockout.mapping-latest.js"></script>
         <script src="KoSpeadsheet.debug.js"></script>
         <script>
         	
@@ -14,10 +16,40 @@
 				    this.id = id;
 				    this.name = name;
 				};
+				
+				var sampledata = {
+					title : "Sample Table",
+					columns : [
+						{name: "Column A", width:"100px", textAlign: 'center'}, 
+						{name: "Column B", width:"100px", textAlign: 'center'}, 
+						{name: "Column C", width:"100px", textAlign: 'center'},
+						{name: "Column D", width:"100px", textAlign: 'center'},
+						{name: "Column E", width:"100px", textAlign: 'center'},
+						{name: "Column F", width:"100px", textAlign: 'center'}
+					],
+					rows : [[
+						{ data : "a"},
+						{ data : "b"},
+						{ data : "c"},
+						{ data : "d"},
+						{ data : "e"},
+						{ data : "f"}
+					],
+						[
+						{ data : "g"},
+						{ data : "h"},
+						{ data : "i"},
+						{ data : "j"},
+						{ data : "k"},
+						{ data : "l"}
+					]]
+				};
 
+				console.log(ko.mapping.fromJS(sampledata));
 				myViewModel = {
-				    items: ko.observableArray([new Item(1, "one"), new Item(2, "two")])
-				}
+					items: ko.mapping.fromJS(sampledata)
+				    //items: ko.observableArray([new Item(1, "one"), new Item(2, "two")])
+				};
     
 				ko.applyBindings(myViewModel);
         	});
@@ -25,10 +57,37 @@
     </head>
     <body>
         <h1>KoSpreadsheet Sample</h1>
+ 		
+        <div data-bind="koSpreadsheet: { data: items }"></div>
+        <!-- <div data-bind="koSpreadsheet: { data: items }"></div> -->
         
-<div data-bind="koSpreadsheet: { data: items, context: {title:'One'} }"></div>
-<hr/>
-        <div data-bind="koSpreadsheet: { name: 'ksTableTmpl', data:items, context: {title:'Two'}  }"></div>
-        
+        <!-- required template for koSpreadsheet -->
+        <script type="text/html" id="ksTableTmpl">
+        	<div style="overflow:auto">
+						<table style="width:95%" class="table table-bordered table-condensed">
+							<caption data-bind="text: title"></caption>
+							<thead>
+							  <tr>                                                
+									<!-- ko foreach: columns -->
+									<th class="spreadsheetHeader">                                        
+										  <span data-bind="text: name">&nbsp;</span>
+									</th>
+									<!-- /ko -->
+								</tr>
+							</thead>
+							<tbody data-bind="foreach: rows">
+							  <tr>
+									<!-- ko foreach: $data -->
+									<td>
+										  <div data-bind="text: data"></div>
+									</td>
+									<!-- /ko -->
+								</tr>
+							</tbody>
+						</table>
+					</div>
+					<hr/>
+					<div data-bind="text: ko.toJSON($data)"></div>
+        </script>
     </body>
 </html>

@@ -8,20 +8,20 @@ var makeNewValueAccessor = function(viewModel){
 	};
 	
 ko.bindingHandlers.koSpreadsheet = {
-	init: function(element, valueAccessor, allBindingsAccessor, viewModel, context) {
-				ks.templateManager.createTemplates();
+	init: function(element, valueAccessor, allBindingsAccessor, viewModel, context) {       	
+				//ks.templateManager.createTemplates();
 				var options = ko.utils.unwrapObservable(valueAccessor());
 				options.name = 'ksTableTmpl'; 
                 return ko.bindingHandlers.template.init.apply(this, arguments);
             },
 	update: function(element, valueAccessor, allBindingsAccessor, viewModel, context) {
                 var options = ko.utils.unwrapObservable(valueAccessor());
-
-                if (options.context) {
-                    options.context.data = options.data;
-                    options.data = options.context;  
-                    delete options.context;
-                }
+				
+                // if (options.context) {
+                    // options.context.data = options.data;
+                    // options.data = options.context;  
+                    // delete options.context;
+                // }
 
 				options.name = 'ksTableTmpl'; 
                 ko.bindingHandlers.template.update.apply(this, arguments);
