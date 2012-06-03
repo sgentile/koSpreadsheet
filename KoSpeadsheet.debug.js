@@ -58,6 +58,7 @@ ks.KoTable = function (data) {
 	self.selectedTableRow = ko.observable(null);
 	self.element = null;
 	self.onUpdate = null;
+	self.onDataUpdate = null;
 	
 	//table id generator for cache
 	this.createNewId = function(){
@@ -243,7 +244,21 @@ ks.KoTable = function (data) {
 	};
 
 	self.exportData = function() {
-		var data= {
+		var data = self.getDataSource();
+		if(self.onExportData){
+			self.onExportData(data);
+		}
+	};
+	
+	self.dataUpdated = function(){
+		var data = self.getDataSource();
+		if(self.onDataUpdate){
+			self.onDataUpdate(data);
+		};
+	};
+	
+	self.getDataSource = function(){
+		return {
 			columns : ko.utils.arrayMap(self.columns(), function(item) {
 				return {
 					name : item.name(),
@@ -266,9 +281,6 @@ ks.KoTable = function (data) {
 				 });
 			 })
 		};
-		if(self.onExportData){
-			self.onExportData(data);
-		}
 	};
 
 	self.makeBold = function() {
@@ -635,8 +647,11 @@ ko.bindingHandlers.koSpreadsheet = {
 		//console.log(table.data);
 		options.data = table;
 		options.name = 'ksTableTmpl'; 
-		if(options.onSave){
-			table.onSave = options.onSave;
+		if(options.onExportData){
+			table.onExportData = options.onExportData;
+		}
+		if(options.onDataUpdate){
+			table.onDataUpdate = options.onDataUpdate;
 		}
         return ko.bindingHandlers.template.init.apply(this, arguments);
     },

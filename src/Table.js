@@ -204,7 +204,21 @@ ks.KoTable = function (data) {
 	};
 
 	self.exportData = function() {
-		var data= {
+		var data = self.getDataSource();
+		if(self.onExportData){
+			self.onExportData(data);
+		}
+	};
+	
+	self.dataUpdated = function(){
+		var data = self.getDataSource();
+		if(self.onDataUpdate){
+			self.onDataUpdate(data);
+		};
+	};
+	
+	self.getDataSource = function(){
+		return {
 			columns : ko.utils.arrayMap(self.columns(), function(item) {
 				return {
 					name : item.name(),
@@ -227,9 +241,6 @@ ks.KoTable = function (data) {
 				 });
 			 })
 		};
-		if(self.onExportData){
-			self.onExportData(data);
-		}
 	};
 
 	self.makeBold = function() {
