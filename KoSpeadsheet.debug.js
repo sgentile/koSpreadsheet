@@ -11,24 +11,64 @@ ks.templates = {};
 
 /* Constants - if grows, move to new file */
 var TABLE_TEMPLATE = 'ksTableTmpl'; 
-/*********************************************** */
-ks.KoTable = function (options) {
-	var defaults = {
-		data: null, //ko.observableArray
+ks.koTableCacheManager = (new function(){
+	var self = this, elementTableKey = '__koSpreadsheet__';
+	
+	//public properties
+	this.tableCache = {};
+	
+	//public methods
+	this.storeTable = function(element, table){
+		self.tableCache[table.tableId] = table;
+		element[elementTableKey] = table.tableId;
 	};
 	
-	self = this;
+	this.getTable = function(element){
+		var table;
+		if(element[elementTableKey]){
+			table = self.tableCache[element[elementTableKey]];
+		}
+		return table;
+	};
+	
+	this.clearTableCache = function(){
+		self.tableCache = {};
+	}
+}());
+
+
+
+/*********************************************** */
+ks.KoTable = function (data) {
+	// var defaults = {
+		// data: null, //ko.observableArray
+	// };
+	data = ko.mapping.toJS(data);
+	var self = this;
+	
+	self.title = ko.observable();
+	self.columns = ko.observableArray([]);
+	self.rows = ko.observableArray([]);
+	
+	//table id generator for cache
+	this.createNewId = function(){
+		var seedId = new Date().getTime();
+		return seedId += 1;
+	};
 	
 	this.$root; //this is the root element that is passed in with the binding handler
 	
-	this.config = $.extend(defaults, options);
+	//this.config = $.extend(defaults, options);
+	
+	this.tableId = "ks" + this.createNewId(); //for cache
 	
 	// set this during the constructor execution so that the
     // computed observables register correctly;
-    this.data = self.config.data;
+    //this.data = self.config.data;
     
-    //if(this.data == null){
-    	this.data = {
+    if(data == null){
+    	//default data:
+    	data = {
 			title : "Table",
 			columns : [
 				{name: "Column A", width:"100px", textAlign: 'center'}, 
@@ -37,107 +77,117 @@ ks.KoTable = function (options) {
 				{name: "Column D", width:"100px", textAlign: 'center'},
 				{name: "Column E", width:"100px", textAlign: 'center'},
 				{name: "Column F", width:"100px", textAlign: 'center'}
-			],
-			rows : [[
-				{ data : ""},
-				{ data : ""},
-				{ data : ""},
-				{ data : ""},
-				{ data : ""},
-				{ data : ""}
-			]]
+			],			
+			rows: [                                                              
+               [{data:"magna", metadata:{fontWeight:"bold", fontStyle: "italic", textAlign: "right"}}, {data:"enim"}, {data:"minim"}, {data:"ipsum"}, {data:"dolor"}, {data:"sit"}],
+               [{data:"eiusmod"}, {data:"incididunt"}, {data:"labore"}, {data:"consectetur"}, {data:"adipisicing"}, {data:"elit"}]
+            ]
 		};
-    //}
+    }
+    self.title(data.title);
+    //this runs on object creation:
+	ko.utils.arrayForEach(data.columns, function(tableHeader) {
+		self.columns.push(new ks.koTableHeader(tableHeader, self));
+	});
+	ko.utils.arrayForEach(data.rows, function(tableRow){
+		self.rows.push(tableRow); //todo: make this a ks.koTableRow
+	});
 }
-ks.templates.defaultTableTemplate = function () {
-    // return  '<table style="width:95%" class="table table-bordered table-condensed">' +
-    		// '<tr><td>test</td></tr>' +
-            // '</table>';
-            
-    return '<table data-bind="with: items">' +
-    	'<thread data-bind="foreach: columns">' + 
-    		'<th data-bind="text: name"></th>' +
-    	'</thread>' +
-    	'<tbody data-bind="foreach: rows">' +
-    		'<tr>' +
-    			'<!-- ko foreach: $data.cells -->' +
-    			'<td><div data-bind="text: data></div></td>' +
-    			'<!-- /ko -->' +
-    		'</tr>' +
-    	'</tbody>' +
-    '</table>';
-    
-    // '<ul data-bind="foreach: data">' +
-        // '<li><span data-bind="text: name"></span></li>' +
-    // '</ul>' +
-    
-    // return
-    // '<table><tr><td>test</td></table>';
-//     
-    // return 
-      // '<table data-bind="click: startEditTable" style="width:95%" class="table table-bordered table-condensed">' +
-      // '<thead>' +
-	  // '<tr>' +                                                
-			// '<!-- ko foreach: columns -->' +
-			// '<th class="spreadsheetHeader" data-bind="click: setSelectedColumn,  style: {width:width(), backgroundColor: selectedColumn() === true ? "#999" : "white", textAlign : textAlign()}">' +                                        
-				  // '<span data-bind="visible: !editing(), text: name, click: edit">&nbsp;</span>' +
-						// '<input style="width:80%;" data-bind="visible: editing, value: name, hasfocus: editing" />' +
-				  // '<i data-bind="visible: $parent.editMode, click:$parent.removeColumn" class="icon-remove-sign pull-right"></i>' +
-			// '</th>' +
-			// '<!-- /ko -->' +
-			// '<th data-bind="visible: editMode" style="width:80px; background-color:white">' +
-				// '<button data-bind="click: $parent.setSelectedTableHeaderRow" class="btn"><i title="select" class="icon-chevron-left"></i></button>' +                                 	
-			// '</th>' +
-		// '</tr>' +
-	// '</thead>' +
-	// '<tbody data-bind="foreach: rows">' +
-	  // '<tr data-bind="style:{backgroundColor: selectedRow() === true ? "#999" : "white"}">' +
-// 			
-			// '<!-- ko foreach: $data.cells -->' +
-			// '<td data-bind="style:{backgroundColor: selectedCell() === true ? "#999" : "white"}">' +
-				  // '<div data-bind="visible: !editMode(), text: data, style:{fontWeight : fontWeight(), fontStyle : fontStyle(), textAlign : textAlign(), textDecoration: textDecoration()}"></div>' +
-						// '<input style="width:90%" data-bind="click: setSelectedTableCell, visible: editMode, value: data, style:{fontWeight : fontWeight(), fontStyle : fontStyle(), textAlign : textAlign(), textDecoration: textDecoration()}" />' +
-			// '</td>' +
-			// '<!-- /ko -->' +
-			// '<td data-bind="visible: $parent.editMode">' +
-					// '<button data-bind="click: $parent.setSelectedTableRow" class="btn"><i title="select" class="icon-chevron-left"></i></button>' +
-				  // '<button data-bind="click: $parent.removeRow" class="btn"><i class="icon-trash"></i></button>' +
-			// '</td>' +
-		// '</tr>' +
-	// '</tbody>' +
-// '</table>';
-    
-};
-/******************************/
-ks.templateManager = (new function(){
+/*********************************************** */
+ks.koTableHeader = function(tableHeader, parent){
+	"use strict";
+	
 	var self = this;
-	
-	
-	var addTemplate = function (templateText, tmplId) {
-        var tmpl = document.createElement("SCRIPT");
-        tmpl.type = "text/html";
-        tmpl.id = tmplId;
+	if(!tableHeader.width) {
+		tableHeader.width = tableHeader.name + "px";
+		//default to size of the text
+	}
 
-        //        'innerText' in tmpl ? tmpl.innerText = templateText
-        //                            : tmpl.textContent = templateText;
+	self.name = ko.observable(tableHeader.name);
+	self.width = ko.observable(tableHeader.width);
+	self.textAlign = ko.observable(tableHeader.textAlign);
+	self.editing = ko.observable(false);
+	self.selectedColumn = ko.observable(false);
 
-        tmpl.text = templateText;
+	self.setSelectedColumn = function(tableHeader) {
+		parent.setSelectedTableHeader(tableHeader);
+	};
 
-        document.body.appendChild(tmpl);
-    };
-    
-    this.createTemplate = function(tmplid, templateTextAccessor){
-    	var templateElement = document.getElementById(tmplid);
-    	if(templateElement === null){
-    		addTemplate(templateTextAccessor(), tmplid);
-    	}
-   	};
-    
-    this.createTemplates = function(){
-    	self.createTemplate(TABLE_TEMPLATE, ks.templates.defaultTableTemplate);
-    };
+	self.edit = function() {
+		this.editing(true);
+	};
 
-}());
+	self.makeColumnBold = function() {
+		var indexOfSelectedHeader = parent.columns.indexOf(self);
+		var selectedHeaderIndexRows = ko.utils.arrayMap(parent.rows(), function(tableRow) {
+			return tableRow.getTableCell(indexOfSelectedHeader);
+		});
+
+		var boldCells = ko.utils.arrayFilter(selectedHeaderIndexRows, function(tableCell) {
+			return tableCell.fontWeight() === 'bold';
+		});
+
+		if(selectedHeaderIndexRows.length == boldCells.length) {//all are bold
+			//unbold all
+			ko.utils.arrayForEach(selectedHeaderIndexRows, function(tableCell) {
+				tableCell.fontWeight('normal');
+			});
+		} else {
+			//bold all:
+			ko.utils.arrayForEach(selectedHeaderIndexRows, function(tableCell) {
+				tableCell.fontWeight('bold');
+			});
+		}
+	};
+
+	self.makeColumnItalic = function() {
+		var indexOfSelectedHeader = parent.columns.indexOf(self);
+		var selectedHeaderIndexRows = ko.utils.arrayMap(parent.rows(), function(tableRow) {
+			return tableRow.getTableCell(indexOfSelectedHeader);
+		});
+
+		var italicCells = ko.utils.arrayFilter(selectedHeaderIndexRows, function(tableCell) {
+			return tableCell.fontStyle() === 'italic';
+		});
+
+		if(selectedHeaderIndexRows.length == italicCells.length) {//all are bold
+			//unitalic all
+			ko.utils.arrayForEach(selectedHeaderIndexRows, function(tableCell) {
+				tableCell.fontStyle('normal');
+			});
+		} else {
+			//italic all:
+			ko.utils.arrayForEach(selectedHeaderIndexRows, function(tableCell) {
+				tableCell.fontStyle('italic');
+			});
+		}
+	};
+
+	self.makeColumnUnderline = function() {
+		var indexOfSelectedHeader = parent.columns.indexOf(self);
+		var selectedHeaderIndexRows = ko.utils.arrayMap(parent.rows(), function(tableRow) {
+			return tableRow.getTableCell(indexOfSelectedHeader);
+		});
+
+		var underlineCells = ko.utils.arrayFilter(selectedHeaderIndexRows, function(tableCell) {
+			return tableCell.textDecoration() === 'underline';
+		});
+
+		if(selectedHeaderIndexRows.length == underlineCells.length) {//all are bold
+			//ununderline all
+			ko.utils.arrayForEach(selectedHeaderIndexRows, function(tableCell) {
+				tableCell.textDecoration('none');
+			});
+		} else {
+			//underline all:
+			ko.utils.arrayForEach(selectedHeaderIndexRows, function(tableCell) {
+				tableCell.textDecoration('underline');
+			});
+		}
+	};
+};
+
+
 
 var makeNewValueAccessor = function(viewModel){
 		return function(){
@@ -152,11 +202,22 @@ ko.bindingHandlers.koSpreadsheet = {
 	init: function(element, valueAccessor, allBindingsAccessor, viewModel, context) {       	
 				//ks.templateManager.createTemplates();
 				var options = ko.utils.unwrapObservable(valueAccessor());
+				var table = new ks.KoTable(options.data);
+				var $element = $(element);
+				
+				//store the table for update:
+				ks.koTableCacheManager.storeTable(element, table);
+				//console.log(table.data);
+				options.data = table;
 				options.name = 'ksTableTmpl'; 
                 return ko.bindingHandlers.template.init.apply(this, arguments);
             },
 	update: function(element, valueAccessor, allBindingsAccessor, viewModel, context) {
                 var options = ko.utils.unwrapObservable(valueAccessor());
+				
+				var table = ks.koTableCacheManager.getTable(element);
+				//console.log(table.data);
+				options.data = table;
 				
                 // if (options.context) {
                     // options.context.data = options.data;

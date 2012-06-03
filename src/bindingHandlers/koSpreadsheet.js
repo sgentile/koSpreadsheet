@@ -11,11 +11,22 @@ ko.bindingHandlers.koSpreadsheet = {
 	init: function(element, valueAccessor, allBindingsAccessor, viewModel, context) {       	
 				//ks.templateManager.createTemplates();
 				var options = ko.utils.unwrapObservable(valueAccessor());
+				var table = new ks.KoTable(options.data);
+				var $element = $(element);
+				
+				//store the table for update:
+				ks.koTableCacheManager.storeTable(element, table);
+				//console.log(table.data);
+				options.data = table;
 				options.name = 'ksTableTmpl'; 
                 return ko.bindingHandlers.template.init.apply(this, arguments);
             },
 	update: function(element, valueAccessor, allBindingsAccessor, viewModel, context) {
                 var options = ko.utils.unwrapObservable(valueAccessor());
+				
+				var table = ks.koTableCacheManager.getTable(element);
+				//console.log(table.data);
+				options.data = table;
 				
                 // if (options.context) {
                     // options.context.data = options.data;

@@ -26,29 +26,15 @@
 						{name: "Column D", width:"100px", textAlign: 'center'},
 						{name: "Column E", width:"100px", textAlign: 'center'},
 						{name: "Column F", width:"100px", textAlign: 'center'}
-					],
-					rows : [[
-						{ data : "a"},
-						{ data : "b"},
-						{ data : "c"},
-						{ data : "d"},
-						{ data : "e"},
-						{ data : "f"}
-					],
-						[
-						{ data : "g"},
-						{ data : "h"},
-						{ data : "i"},
-						{ data : "j"},
-						{ data : "k"},
-						{ data : "l"}
-					]]
-				};
+					],			
+					rows: [                                                              
+		               [{data:"magna", metadata:{fontWeight:"bold", fontStyle: "italic", textAlign: "right"}}, {data:"enim"}, {data:"minim"}, {data:"ipsum"}, {data:"dolor"}, {data:"sit"}],
+		               [{data:"eiusmod"}, {data:"incididunt"}, {data:"labore"}, {data:"consectetur"}, {data:"adipisicing"}, {data:"elit"}]
+		            ]};
 
 				console.log(ko.mapping.fromJS(sampledata));
 				myViewModel = {
 					items: ko.mapping.fromJS(sampledata)
-				    //items: ko.observableArray([new Item(1, "one"), new Item(2, "two")])
 				};
     
 				ko.applyBindings(myViewModel);
@@ -59,7 +45,11 @@
         <h1>KoSpreadsheet Sample</h1>
  		
         <div data-bind="koSpreadsheet: { data: items }"></div>
-        <!-- <div data-bind="koSpreadsheet: { data: items }"></div> -->
+        
+        <!-- To create an empty, new table: 
+        <hr/>
+        <div data-bind="koSpreadsheet: { data: null }"></div>-->
+        <!--or <div data-bind="koSpreadsheet: {}"></div> -->
         
         <!-- required template for koSpreadsheet -->
         <script type="text/html" id="ksTableTmpl">

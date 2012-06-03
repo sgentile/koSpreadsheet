@@ -21,9 +21,13 @@ function concat(fileList, distPath) {
 concat([
 	'builderheader.js',
 	'../src/Namespace.js',
+	'../src/TableCacheManager.js',
 	'../src/Table.js',
-	'../src/templates/TableTemplate.js',
-	'../src/templates/TemplateManager.js',
+	'../src/TableHeader.js',
+	'../src/TableRow.js',
+	'../src/TableCell.js',
+	// '../src/templates/TableTemplate.js',
+	// '../src/templates/TemplateManager.js',
     '../src/bindingHandlers/koSpreadsheet.js'
 ], DIST_FILE_PATH);
 
