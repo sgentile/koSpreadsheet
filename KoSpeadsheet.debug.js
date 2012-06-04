@@ -191,7 +191,7 @@ ks.KoTable = function (data) {
 	};
 
 	self.setWidths = function(columns) {
-		_.each(columns, function(value, index) {
+		$.each(columns, function(index, value) {
 			if(index < self.columns().length)//skip first one... it's not a data column
 			{
 				self.columns()[index].width($(value).width());
