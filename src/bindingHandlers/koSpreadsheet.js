@@ -83,7 +83,7 @@ ks.applyResizer = function($element, table){
 			$colResizable.colResizable(
 			{
 				postbackSafe	: true, 
-				onResize		: tableSectionViewModel.onResized
+				onResize		: table.onResized
 			});
 		}, 1);
 	});

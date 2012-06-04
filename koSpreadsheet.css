@@ -1,24 +1,3 @@
-.tablebutton
-{
-	display: block;
-	border:1px solid #F0F0EE;
-	height: 20px;
-	width: 20px;
-	/*background : url(../scripts/tiny_mce/themes/advanced/img/icons.gif) no-repeat;	*/
-}
-.tablebutton:hover
-{
-	border:1px solid #0A246A; 
-	background-color:#B2BBD0;	
-}
-
-.tableboldbutton{ background-position: 0px 0px; }
-.tableitalicsbutton{ background-position: -60px 0px; }
-.tableunderlinebutton{ background-position: -140px 0px; }
-.tableleftjustifybutton{ background-position: -460px 0px; }
-.tablecenterjustifybutton{ background-position: -420px 0px; }
-.tablerightjustifybutton{ background-position: -480px 0px; }
-
 .icon-text-underline {
    background:url('lib/bootstrap/img/glyphicons_103_text_underline.png') 0 0; 
 }
