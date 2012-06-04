@@ -352,7 +352,7 @@ ks.KoTable = function (data) {
 			var indexOfSelectedHeader = self.columns.indexOf(selectedTableHeader);
 			ko.utils.arrayForEach(self.rows(), function(tableRow) {
 				var selectedTableCell = tableRow.getTableCell(indexOfSelectedHeader);
-				selectedTableCell.textAlign('right');
+				selectedTableCell.textAlign(direction);
 			});
 		}
 		var selectedTableRow = self.selectedTableRow();
