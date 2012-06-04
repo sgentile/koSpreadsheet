@@ -19,3 +19,7 @@
 .tablecenterjustifybutton{ background-position: -420px 0px; }
 .tablerightjustifybutton{ background-position: -480px 0px; }
 
+.icon-text-underline {
+   background:url('lib/bootstrap/img/glyphicons_103_text_underline.png') 0 0; 
+}
+
