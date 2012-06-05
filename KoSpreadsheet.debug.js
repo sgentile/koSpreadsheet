@@ -46,7 +46,6 @@ ks.KoTable = function (data) {
 	data = ko.mapping.toJS(data);
 	var self = this;
 	
-	self.title = ko.observable();
 	self.columns = ko.observableArray([]);
 	self.rows = ko.observableArray([]);
 	
@@ -58,7 +57,6 @@ ks.KoTable = function (data) {
 	self.selectedTableRow = ko.observable(null);
 	self.element = null;
 	self.onUpdate = null;
-	self.onDataUpdate = null;
 	
 	//table id generator for cache
 	this.createNewId = function(){
@@ -79,7 +77,7 @@ ks.KoTable = function (data) {
     if(data == null){
     	//default data:
     	data = {
-			title : "Table",
+			//title : "Table",
 			columns : [
 				{name: "Column A", width:"100px", textAlign: 'center'}, 
 				{name: "Column B", width:"100px", textAlign: 'center'}, 
@@ -94,8 +92,7 @@ ks.KoTable = function (data) {
             ]
 		};
     }
-    self.title(data.title);
-	
+    
 	self.setSelectedTableCell = function(rowCell) {		
 		self.clearAllSelected();
 		self.selectedTableCell(rowCell);
@@ -650,9 +647,6 @@ ko.bindingHandlers.koSpreadsheet = {
 		if(options.onExportData){
 			table.onExportData = options.onExportData;
 		}
-		if(options.onDataUpdate){
-			table.onDataUpdate = options.onDataUpdate;
-		}
         return ko.bindingHandlers.template.init.apply(this, arguments);
     },
 	update: function(element, valueAccessor, allBindingsAccessor, viewModel, context) {
@@ -661,14 +655,7 @@ ko.bindingHandlers.koSpreadsheet = {
 		var table = ks.koTableCacheManager.getTable(element);
 		var $element = $(element);
 		
-		//console.log(table.data);
 		options.data = table;
-		
-        // if (options.context) {
-            // options.context.data = options.data;
-            // options.data = options.context;  
-            // delete options.context;
-        // }
 
 		options.name = 'ksTableTmpl'; 
         ko.bindingHandlers.template.update.apply(this, arguments);

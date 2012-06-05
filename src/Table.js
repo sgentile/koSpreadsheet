@@ -6,7 +6,6 @@ ks.KoTable = function (data) {
 	data = ko.mapping.toJS(data);
 	var self = this;
 	
-	self.title = ko.observable();
 	self.columns = ko.observableArray([]);
 	self.rows = ko.observableArray([]);
 	
@@ -38,7 +37,7 @@ ks.KoTable = function (data) {
     if(data == null){
     	//default data:
     	data = {
-			title : "Table",
+			//title : "Table",
 			columns : [
 				{name: "Column A", width:"100px", textAlign: 'center'}, 
 				{name: "Column B", width:"100px", textAlign: 'center'}, 
@@ -53,8 +52,7 @@ ks.KoTable = function (data) {
             ]
 		};
     }
-    self.title(data.title);
-	
+    
 	self.setSelectedTableCell = function(rowCell) {		
 		self.clearAllSelected();
 		self.selectedTableCell(rowCell);
