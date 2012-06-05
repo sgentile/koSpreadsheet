@@ -18,7 +18,6 @@ ks.KoTable = function (data) {
 	self.selectedTableRow = ko.observable(null);
 	self.element = null;
 	self.onUpdate = null;
-	self.onDataUpdate = null;
 	
 	//table id generator for cache
 	this.createNewId = function(){

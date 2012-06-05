@@ -1,7 +1,7 @@
 // settings
 var FILE_ENCODING = 'utf-8',
     EOL = '\n',
-    DIST_FILE_PATH = '../KoSpeadsheet.debug.js';
+    DIST_FILE_PATH = '../KoSpreadsheet.debug.js';
 
 // setup
 var _fs = require('fs');

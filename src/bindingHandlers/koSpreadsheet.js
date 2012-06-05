@@ -22,9 +22,6 @@ ko.bindingHandlers.koSpreadsheet = {
 		if(options.onExportData){
 			table.onExportData = options.onExportData;
 		}
-		if(options.onDataUpdate){
-			table.onDataUpdate = options.onDataUpdate;
-		}
         return ko.bindingHandlers.template.init.apply(this, arguments);
     },
 	update: function(element, valueAccessor, allBindingsAccessor, viewModel, context) {
@@ -33,14 +30,7 @@ ko.bindingHandlers.koSpreadsheet = {
 		var table = ks.koTableCacheManager.getTable(element);
 		var $element = $(element);
 		
-		//console.log(table.data);
 		options.data = table;
-		
-        // if (options.context) {
-            // options.context.data = options.data;
-            // options.data = options.context;  
-            // delete options.context;
-        // }
 
 		options.name = 'ksTableTmpl'; 
         ko.bindingHandlers.template.update.apply(this, arguments);
