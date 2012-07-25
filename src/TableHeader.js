@@ -4,23 +4,18 @@ ks.koTableHeader = function(tableHeader, parent){
 	
 	var self = this;
 	if(!tableHeader.width) {
-		tableHeader.width = tableHeader.name + "px";
+		tableHeader.width = "50px";
 		//default to size of the text
 	}
 
-	self.name = ko.observable(tableHeader.name);
 	self.width = ko.observable(tableHeader.width);
 	self.textAlign = ko.observable(tableHeader.textAlign);
-	self.editing = ko.observable(false);
 	self.selectedColumn = ko.observable(false);
 
 	self.setSelectedColumn = function(tableHeader) {
 		parent.setSelectedTableHeader(tableHeader);
 	};
 
-	self.edit = function() {
-		this.editing(true);
-	};
 
 	self.makeColumnBold = function() {
 		var indexOfSelectedHeader = parent.columns.indexOf(self);

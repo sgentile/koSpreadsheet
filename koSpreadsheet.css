@@ -2,3 +2,52 @@
    background:url('lib/bootstrap/img/glyphicons_103_text_underline.png') 0 0; 
 }
 
+.spreadsheetTable th.spreadsheetColumn,
+.spreadsheetTable th.spreadsheetRow {
+	background-color: #EEE;
+	text-align: center;
+}
+
+.spreadsheetTable th.spreadsheetRow {
+	width:15px;
+}
+
+.spreadsheetTable tr td input{
+	width:100%;
+	box-sizing: border-box;
+	-ms-box-sizing: border-box;
+	-moz-box-sizing: border-box;
+	margin: -4px 0;
+	border: 1px solid white;
+	padding:2px;
+}
+/*
+table.spreadsheetTable thead tr:first-child th.selected {
+	border:2px solid #999;
+	border-bottom:0px none;
+}
+table.spreadsheetTable tr td.selected {
+	border-left:2px solid #999;
+	border-right:2px solid #999;
+}
+table.spreadsheetTable tr:last-child td.selected{
+	border:0px none;
+	border-left: 1px solid #DDD;
+	border-top:2px solid #999;
+}
+table.spreadsheetTable thead tr.selected:first-child th.selected,
+table.spreadsheetTable tr.selected td.selected {
+	border:2px solid #999;
+	border-left:1px solid #DDD;
+	border-right:0px none;
+}
+table.spreadsheetTable thead tr.selected:first-child th.selected:last-child,
+table.spreadsheetTable tr.selected td.selected:last-child{
+	border:0px none;
+	border-top: 1px solid #DDD;
+	border-left:2px solid #999;
+}
+table.spreadsheetTable thead tr.selected:first-child th.selected:first-child,
+table.spreadsheetTable tr.selected td.selected:first-child{
+	border-left:2px solid #999;
+}*/

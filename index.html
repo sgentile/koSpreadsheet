@@ -10,7 +10,14 @@
         <script src="lib/knockout-2.1.0.debug.js"></script>
         <script src="lib/knockout.mapping-latest.js"></script>
         <script src="lib/colResizable-1.3.min.js"></script>
-        <script src="KoSpreadsheet.debug.js"></script>
+	<script src='src/Namespace.js'></script>
+	<script src='src/TableCacheManager.js'></script>
+	<script src='src/Table.js'></script>
+	<script src='src/TableHeader.js'></script>
+	<script src='src/TableRow.js'></script>
+	<script src='src/TableCell.js'></script>
+    <script src='src/bindingHandlers/koSpreadsheet.js'></script>
+		
 
         <script>
         	$(function(){
@@ -71,31 +78,28 @@
 						</div>	
 					</div>
         	<div style="overflow:auto">
-						<table style="width:95%" class="table table-bordered table-condensed">
+						<table style="width:95%" class="table table-bordered table-condensed spreadsheetTable">
 							<thead>
-							  <tr>                                                
+							  <tr>     
+									<th class="spreadsheetRow">&nbsp;</th>
 									<!-- ko foreach: columns -->
-									<th class="spreadsheetHeader" data-bind="click: setSelectedColumn,  style: {width:width(), backgroundColor: selectedColumn() === true ? '#999' : 'white', textAlign : textAlign()}">                                        
-										  <span data-bind="visible: !editing(), text: name, click: edit">&nbsp;</span>
-												<input style="width:80%;" data-bind="visible: editing, value: name, hasfocus: editing" />
-										  <i data-bind="visible: $parent.editMode, click:$parent.removeColumn" class="icon-remove-sign pull-right"></i>
+									<th class="spreadsheetColumn" data-bind="click: setSelectedColumn,  style: {width:width()}">                                        
+										  <i class=" icon-chevron-down"></i>
 									</th>
 									<!-- /ko -->
 								</tr>
 							</thead>
 							<tbody data-bind="foreach: rows">
 							  <tr data-bind="style:{backgroundColor: selectedRow() === true ? '#999' : 'white'}">
-									
+									<th class="spreadsheetRow">
+										<i data-bind="click: $parent.setSelectedTableRow" title="select" class="icon-chevron-right"></i>
+									</th>
 									<!-- ko foreach: $data.cells -->
-									<td data-bind="style:{backgroundColor: selectedCell() === true ? '#999' : 'white'}">
+									<td data-bind="css:{selected: selectedCell()}">
 										  <div data-bind="visible: !editMode(), text: data, style:{fontWeight : fontWeight(), fontStyle : fontStyle(), textAlign : textAlign(), textDecoration: textDecoration()}"></div>
-												<input style="width:90%" data-bind="click: setSelectedTableCell, visible: editMode, value: data, style:{fontWeight : fontWeight(), fontStyle : fontStyle(), textAlign : textAlign(), textDecoration: textDecoration()}" />
+												<input data-bind="click: setSelectedTableCell, visible: editMode, value: data, style:{fontWeight : fontWeight(), fontStyle : fontStyle(), textAlign : textAlign(), textDecoration: textDecoration()}" />
 									</td>
 									<!-- /ko -->
-									<td data-bind="visible: $parent.editMode">
-											<button data-bind="click: $parent.setSelectedTableRow" class="btn"><i title="select" class="icon-chevron-left"></i></button>
-										  <button data-bind="click: $parent.removeRow" class="btn"><i class="icon-trash"></i></button>
-									</td>
 								</tr>
 							</tbody>
 						</table>
